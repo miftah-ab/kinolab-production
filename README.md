@@ -1,26 +1,39 @@
-# KinoLab Production Skill
+# KinoLab Production
 
-A Claude skill for planning and supervising cinematic commercial video production for real businesses.
+KinoLab is a Claude skill for directing commercial video production from the first client question to final delivery.
 
-## What it does
+## Canonical skill
 
-- Guides a user through a simple, one-question-at-a-time production intake.
-- Turns a business objective into an ad concept, script, visual bible and shot plan.
-- Writes detailed, generator-independent image and video prompts.
-- Plans genuine Blender 3D shots with local Python automation where appropriate.
-- Produces editing, motion graphics, color and full sound-design instructions.
-- Applies cost, licensing, technical and human quality gates.
+The installable skill lives at:
 
-## Install
+`.claude/skills/kinolab-production/SKILL.md`
 
-Use the root `SKILL.md` as the skill entry point in a Claude-compatible skills workflow. Keep the `references/`, `templates/`, and `evals/` folders alongside it; the skill references them by relative path.
+It includes a one-question-at-a-time production intake, commercial strategy, scripts/storyboards, cinematography, image/video prompts, optional Blender 3D, editing, sound design, platform exports, rights/compliance, media QC, templates and utility scripts.
 
-For Claude Code, place the repository folder in the project's `.claude/skills/kinolab-production/` directory (or your user-level skills directory) with this same structure.
+## Install in Claude Code
 
-## Operating model
+Claude Code discovers project skills at `.claude/skills/<skill-name>/SKILL.md`. This repository uses that exact structure. Clone/open this repository as the project and use Claude Code in the repository. For personal scope, copy or symlink the `kinolab-production` folder into `~/.claude/skills/kinolab-production/`.
 
-Claude is the creative director and production supervisor. The user runs prompts in their chosen image/video generator, runs Blender scripts in Blender, and edits in their chosen editor (currently CapCut Desktop). This skill does not require paid APIs, provider accounts, or Blender MCP.
+## Install in claude.ai
 
-## Quality and limitations
+Zip the contents of `.claude/skills/kinolab-production/` as a single top-level `kinolab-production/` folder and upload it through Claude's custom Skills settings, if available on your plan/account. Do not upload the entire repository as the skill bundle. GitHub hosting does not automatically install a custom Skill in claude.ai.
 
-The skill provides a disciplined workflow, not a guarantee that any generative model or render will be flawless. Every important visual must be inspected; every final export must pass technical checks and human review. Do not claim media was inspected if it was not actually provided or accessible.
+See [INSTALL.md](.claude/skills/kinolab-production/INSTALL.md) for exact instructions.
+
+## Validate
+
+From the repository root:
+
+```bash
+python3 .claude/skills/kinolab-production/scripts/validate_skill.py
+```
+
+For media inspection, the optional scripts require FFmpeg/ffprobe. Blender and Blender MCP are not mandatory.
+
+## Research
+
+See [.claude/skills/kinolab-production/REFERENCES.md](.claude/skills/kinolab-production/REFERENCES.md) for the researched source repositories, official technical documentation and selection notes.
+
+## Important
+
+This is a production workflow and skill package, not a guarantee of perfect generated media. The evaluations must be run in the actual Claude environment, and every finished video still needs human visual/audio review and client approval.
