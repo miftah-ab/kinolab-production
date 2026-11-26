@@ -44,6 +44,6 @@ def main():
                 scans["audio"]={"return_code":q.returncode,"log":q.stderr[-10000:]}
             out["heuristic_scans"]=scans
     print(json.dumps(out,indent=2))
-    print("\\nHeuristics are not proof of quality. Play the full video and listen to the full audio.")
+    print("\nHeuristics are not proof of quality. Play the full video and listen to the full audio.")
     return 0
 if __name__=="__main__": raise SystemExit(main())
