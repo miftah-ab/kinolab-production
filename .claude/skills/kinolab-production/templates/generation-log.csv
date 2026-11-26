@@ -1,0 +1,2 @@
+shot_id,asset_filename,asset_type,provider,model,model_version,settings,master_prompt_version,reference_files,cost_or_credits,generated_at,review_status,defect_notes,approved
+KL01_SC01_SH01,,,,,,,,,,,,pending,
