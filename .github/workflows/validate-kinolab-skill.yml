@@ -1,0 +1,30 @@
+name: Validate KinoLab Skill
+
+on:
+  pull_request:
+    paths:
+      - ".claude/skills/kinolab-production/**"
+      - "README.md"
+      - ".github/workflows/validate-kinolab-skill.yml"
+  push:
+    branches: [main]
+    paths:
+      - ".claude/skills/kinolab-production/**"
+      - "README.md"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate skill structure and references
+        run: python .claude/skills/kinolab-production/scripts/validate_skill.py
+      - name: Compile utility scripts
+        run: python -m py_compile .claude/skills/kinolab-production/scripts/*.py
+      - name: Check utility command help
+        run: |
+          python .claude/skills/kinolab-production/scripts/media_probe.py --help
+          python .claude/skills/kinolab-production/scripts/contact_sheet.py --help
