@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read media metadata with ffprobe; optional heuristic black/freeze/silence scan."""
+"""Read media metadata with ffprobe; optional heuristic black/freeze/silence scans."""
 import argparse, json, shutil, subprocess, sys
 from pathlib import Path
 
@@ -19,24 +19,31 @@ def main():
     r=run(["ffprobe","-v","error","-show_format","-show_streams","-of","json",str(a.media)])
     if r.returncode:
         print(r.stderr.strip() or "ffprobe failed",file=sys.stderr); return r.returncode or 1
-    d=json.loads(r.stdout); f=d.get("format",{})
+    d=json.loads(r.stdout); f=d.get("format",{}); streams=d.get("streams",[])
     out={"file":str(a.media),"format":f.get("format_name"),
          "duration_seconds":float(f["duration"]) if f.get("duration") else None,
          "size_bytes":int(f["size"]) if f.get("size") else None,"streams":[]}
-    for s in d.get("streams",[]):
+    for s in streams:
         out["streams"].append({k:s.get(k) for k in
           ("index","codec_type","codec_name","profile","width","height","pix_fmt",
            "avg_frame_rate","sample_rate","channels","channel_layout","color_space",
            "color_transfer","color_primaries")})
     if a.scan:
-        if not shutil.which("ffmpeg"): out["scan_warning"]="ffmpeg not found; metadata only"
+        if not shutil.which("ffmpeg"):
+            out["scan_warning"]="ffmpeg not found; metadata only"
         else:
-            vf=(f"blackdetect=d={a.black_duration}:pix_th=0.10,"
-                f"freezedetect=n=-50dB:d={a.freeze_duration},"
-                f"silencedetect=noise=-50dB:d={a.silence_duration}")
-            q=run(["ffmpeg","-hide_banner","-i",str(a.media),"-vf",vf,"-an","-f","null","-"])
-            out["heuristic_scan"]={"return_code":q.returncode,"log":q.stderr[-12000:]}
+            video=any(s.get("codec_type")=="video" for s in streams)
+            audio=any(s.get("codec_type")=="audio" for s in streams)
+            scans={}
+            if video:
+                vf=f"blackdetect=d={a.black_duration}:pix_th=0.10,freezedetect=n=-50dB:d={a.freeze_duration}"
+                q=run(["ffmpeg","-hide_banner","-i",str(a.media),"-vf",vf,"-an","-f","null","-"])
+                scans["video"]={"return_code":q.returncode,"log":q.stderr[-10000:]}
+            if audio:
+                q=run(["ffmpeg","-hide_banner","-i",str(a.media),"-vn","-af",f"silencedetect=noise=-50dB:d={a.silence_duration}","-f","null","-"])
+                scans["audio"]={"return_code":q.returncode,"log":q.stderr[-10000:]}
+            out["heuristic_scans"]=scans
     print(json.dumps(out,indent=2))
-    print("\nHeuristics are not proof of quality. Play the full video and listen to the full audio.")
+    print("\\nHeuristics are not proof of quality. Play the full video and listen to the full audio.")
     return 0
 if __name__=="__main__": raise SystemExit(main())
