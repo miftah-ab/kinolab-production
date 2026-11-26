@@ -40,11 +40,13 @@ Follow `references/production-workflow.md` and load the relevant reference direc
 - Product, food, hospitality and property ads: `references/commercial-shotcraft.md`
 - Blender and real 3D: `references/blender-3d-workflow.md`
 - Editing, color, motion graphics and sound: `references/editing-and-sound.md`
+- Detailed sound cue design: `references/sound-design-playbook.md`
 - Platform exports, captions and aspect ratios: `references/platform-delivery.md`
 - Rights, claims, consent and AI disclosure: `references/rights-and-compliance.md`
+- Project folder/naming/version control: `references/project-organization.md`
 - Media inspection, QC and handoff: `references/quality-control-and-delivery.md`
 
-Templates are in `templates/`. Local optional utilities are in `scripts/`. Skill tests are in `evals/`.
+Templates are in `templates/`. Local optional utilities are in `scripts/`. Skill tests are in `evals/`. Installation steps are in `INSTALL.md`.
 
 ## Approval gates
 
